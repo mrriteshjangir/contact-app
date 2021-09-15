@@ -18,7 +18,7 @@
         
       </ul>
       <div class="d-flex">
-        <button class="btn btn-outline-success" type="submit">Login/Signup</button>
+        <a href="signup.php" class="btn btn-outline-success" type="submit">Login/Signup</a>
       </div>
     </div>
   </div>

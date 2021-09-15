@@ -10,8 +10,8 @@
     {
         die("Coonection not done".$conn->connect_error);
     }
-    else
-    {
-        echo "Connection is successfull";
-    }
+    // else
+    // {
+    //     echo "Connection is successfull";
+    // }
 ?>
