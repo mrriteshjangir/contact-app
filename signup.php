@@ -1,7 +1,6 @@
 <?php
     include('config.php');
-    
-    $dir='uploads/profile/';
+    include('components/validation.php');
 
     if(isset($_POST['create']))
     {
@@ -13,7 +12,21 @@
 
         if($pass==$conf_pass)
         {
-            include('components/valid_img.php');
+            imgValidation();
+            
+            $encPass=md5($pass);
+            $abc="INSERT INTO auth(photo,fullname,email,mobile,pass,created)
+                        VALUES('$path','$name','$email',$mobile,'$encPass',now())";
+            
+            if($conn->query($abc))
+            {
+                echo "<script>alert('Data added successfully');</script>";
+            }
+            else
+            {
+                echo "Error : ".$conn->error;
+            }
+
         }
         else
         {
