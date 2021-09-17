@@ -17,8 +17,17 @@
         </li>
         
       </ul>
-      <div class="d-flex">
-        <a href="signup.php" class="btn btn-outline-success" type="submit">Login/Signup</a>
+      
+      
+      <div class="dropdown dropstart">
+      <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Action
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="signin.php">Sign In</a></li>
+        <li><a class="dropdown-item" href="signup.php">Sign Up</a></li>
+      </ul>
+    
       </div>
     </div>
   </div>
