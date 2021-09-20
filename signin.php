@@ -14,7 +14,10 @@
             
             while($row=$result->fetch_assoc())
             {
-                if($row['pass']==$pass)
+                $encPass=md5($pass);
+
+                echo $row['pass']."==".$encPass."<br>";
+                if($row['pass']==$encPass)
                 {
                     echo "
                         <script>
@@ -49,12 +52,12 @@
             
             <div class="mb-3">
                 <label class="form-label">Email address :</label>
-                <input type="email" class="form-control" name="email">
+                <input type="email" class="form-control" name="email" required maxlength="100" minlength="10">
             </div>
             
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-control" name="pass">
+                <input type="password" class="form-control" name="pass" required maxlength="15" minlength="6">
             </div>
             
             <div class="mb-3">
@@ -65,6 +68,7 @@
                     Reset
                 </button>
             </div>
+            <a href="signup.php" class="refral-link">New user ? Click Here to create account</a>
         </form>
     </div>
 
