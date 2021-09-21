@@ -1,35 +1,130 @@
 <?php
-    function imgValidation()
+    function signupValid()
     {
+        $errors=array();
+
+        // For ProfileImage Validation <--- Code Starts Here
         global $path,$dir;
-
         $dir='uploads/profile/';
+        $path=$dir.$_FILES['myFile']['name'];
 
-        $path=$dir.$_FILES['profile_img']['name'];
+        $ext = pathinfo($_FILES['myFile']['name'], PATHINFO_EXTENSION);
 
-        $ext = pathinfo($_FILES['profile_img']['name'], PATHINFO_EXTENSION);
-
-        if($ext=='png'||$ext=='jpg'||$ext=='jpeg'||$ext=='svg')
+        if($_FILES['myFile']['size']==null)
+        {
+            $errors['fileErr']="Profile Image is Mandatory";
+        }
+        else if($ext=='png'||$ext=='jpg'||$ext=='jpeg'||$ext=='svg')
         {
             if(!file_exists($path))
             {
                 // file size is must written in bytes
-                if($_FILES['profile_img']['size']<=2000000)
+                if($_FILES['myFile']['size']<=1000000)
                 {
-                    move_uploaded_file($_FILES['profile_img']['tmp_name'],$path);
+                    move_uploaded_file($_FILES['myFile']['tmp_name'],$path);
                 }
                 else{
-                    echo "Limmit exicced";
+                   $errors['fileErr']="The limit file is exiced.The allowed size is 1 MB.";
                 }
             }
             else
             {
-                echo "imge alrdy present";
+                $errors['fileErr']="This file is already in uploaded.";
             }
         }
         else
         {
-            echo "This ".$ext." file type is not allowed";
+    
+            $errors['fileErr']="This ".$ext." file type is not allowed";
         }
+        // For ProfileImage Validation <--- Code Ends Here
+
+        // For Name Validation <--- Code Starts Here
+
+        if(!$_POST['fullname'])
+        {
+            $errors['nameErr']="Name could not be empty";
+        }
+        else if(!preg_match("#^[A-Za-z ]*$#",$_POST['fullname']))
+        {
+            $errors['nameErr']="Name can't be like this";
+        }
+        else if(strlen($_POST['fullname'])<=2)
+        {
+            $errors['nameErr']="Name could not be less than 2 Characters";
+        }
+        else if(strlen($_POST['fullname'])>50)
+        {
+            $errors['nameErr']="Name could not be more than 50 Characters";
+        }
+
+        // For Name Validation <--- Code Ends Here
+
+        // For Email Validation <--- Code Starts Here
+
+        if(!$_POST['email'])
+        {
+            $errors['emailErr']="Email could not be empty";
+        }
+        else if(!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL))
+        {
+            $errors['emailErr']="Not a valid email structure";
+        }
+        else if(strlen($_POST['email'])<=10)
+        {
+            $errors['emailErr']="Email could not be less than 10 Characters";
+        }
+        else if(strlen($_POST['email'])>100)
+        {
+            $errors['emailErr']="Email could not be more than 100 Characters";
+        }
+
+        // For Email Validation <--- Code Ends Here
+
+        // For Mob Validation <--- Code Starts Here
+
+        if(!$_POST['mobile'])
+        {
+            $errors['mobErr']="Mobile number coulde not be empty";
+        }
+        else if(!preg_match("#^[6-9]{1}[0-9]*$#",$_POST['mobile']))
+        {
+            $errors['mobErr']="Not valid mobile number";
+        }
+        else if(!strlen($_POST['mobile'])==10)
+        {
+            $errors['mobErr']="Mobile number should have 10 Numbers";
+        }
+
+        // For Mob Validation <--- Code Ends Here
+
+        // For Password Validation <--- Code Starts Here
+
+        if(!$_POST['pass'])
+        {
+            $errors['passErr']="Password could not be empty";
+        }
+        else if(!preg_match("#^(?.=*[0-9])(?.=*[a-z])(?.=*[A-Z])(?.=*[$!@#%^&*])[0-9a-zA-z$!@#%^&*]{1}*$#",$_POST['pass']))
+        {
+            $errors['passErr']="Not a valid password must use ONE Specal character
+                One Number,One Capital Latter,One Lower Latter";
+        }
+        else if(strlen($_POST['pass'])<=6)
+        {
+            $errors['passErr']="Password could not be less than 6 Characters";
+        }
+        else if(strlen($_POST['pass'])>=15)
+        {
+            $errors['passErr']="Password could not be more than 15 Characters";
+        }
+        // For Password Validation <--- Code Ends Here
+
+        if(!$_POST['conf_pass'])
+        {
+            $errors['ConfPassErr']="Password could not be empty";
+        }
+
+
+        return $errors;
     }
 ?>

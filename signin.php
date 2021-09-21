@@ -16,12 +16,10 @@
             {
                 $encPass=md5($pass);
 
-                echo $row['pass']."==".$encPass."<br>";
                 if($row['pass']==$encPass)
                 {
                     echo "
                         <script>
-                            alert('Login successfully');
                             window.location='dashboard.php';
                         </script>
                     ";

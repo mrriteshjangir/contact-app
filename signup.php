@@ -10,24 +10,28 @@ if (isset($_POST['create'])) {
     $conf_pass = $_POST['conf_pass'];
 
     if ($pass == $conf_pass)
-    {
-        imgValidation();
+    {   
+        $errList=array();
+        $errList=signupValid();
 
         $encPass = md5($pass);
         
-        $abc = "INSERT INTO auth(photo,fullname,email,mobile,pass,created)
+        if(!count($errList))
+        {
+            $abc = "INSERT INTO auth(photo,fullname,email,mobile,pass,created)
                         VALUES('$path','$name','$email',$mobile,'$encPass',now())";
 
-        if ($conn->query($abc)) 
-        {
-            echo "<script>
-                alert('Data added successfully');
-                window.location='signin.php';
-            </script>";
-        } 
-        else 
-        {
-            echo "Error : " . $conn->error;
+            if ($conn->query($abc)) 
+            {
+                echo "<script>
+                    swal('Data added successfully');
+                    window.location='signin.php';
+                </script>";
+            } 
+            else 
+            {
+                echo "Error : " . $conn->error;
+            }
         }
     } 
     else 
@@ -51,28 +55,34 @@ if (isset($_POST['create'])) {
         <form class="s-form" action="" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label">Select Profile Image : <sup class="text-danger">*</sup></label>
-                <input type="file" class="form-control" name="profile_img" required>
+                <input type="file" class="form-control" name="myFile">
             </div>
+            <?php if(isset($errList['fileErr'])) {echo "<span class='text-danger'>".$errList['fileErr']."</span>";} ?>
             <div class="mb-3">
                 <label class="form-label">Full Name : <sup class="text-danger">*</sup></label>
-                <input type="text" class="form-control" name="fullname" required maxlength="50" minlength="2">
+                <input type="text" class="form-control" name="fullname">
             </div>
+            <?php if(isset($errList['nameErr'])) {echo "<span class='text-danger'>".$errList['nameErr']."</span>";} ?>
             <div class="mb-3">
                 <label class="form-label">Email address : <sup class="text-danger">*</sup></label>
-                <input type="email" class="form-control" name="email" required maxlength="100" minlength="10">
+                <input type="email" class="form-control" name="email">
             </div>
+            <?php if(isset($errList['emailErr'])) {echo "<span class='text-danger'>".$errList['emailErr']."</span>";} ?>
             <div class="mb-3">
                 <label class="form-label">Mobile Number :<sup class="text-danger">*</sup></label>
-                <input type="tel" class="form-control" name="mobile" required maxlength="10" minlength="10">
+                <input type="tel" class="form-control" name="mobile">
             </div>
+            <?php if(isset($errList['mobErr'])) {echo "<span class='text-danger'>".$errList['mobErr']."</span>";} ?>
             <div class="mb-3">
                 <label class="form-label">Password : <sup class="text-danger">*</sup></label>
-                <input type="password" class="form-control" name="pass" required maxlength="15" minlength="6">
+                <input type="password" class="form-control" name="pass">
             </div>
+            <?php if(isset($errList['passErr'])) {echo "<span class='text-danger'>".$errList['passErr']."</span>";} ?>
             <div class="mb-3">
                 <label class="form-label">Confirm Password : <sup class="text-danger">*</sup></label>
-                <input type="password" class="form-control" name="conf_pass" required maxlength="15" minlength="6">
+                <input type="password" class="form-control" name="conf_pass">
             </div>
+            <?php if(isset($errList['ConfPassErr'])) {echo "<span class='text-danger'>".$errList['ConfPassErr']."</span>";} ?>
             <div class="mb-3">
                 <button class="btn btn-success" type="submit" name="create">
                     Create Account
