@@ -1,7 +1,6 @@
 <?php
 include('config.php');
-include('components/validation.php');
-
+$flag = 0;
 if (isset($_POST['create'])) {
     $name = $_POST['fullname'];
     $email = $_POST['email'];
@@ -9,34 +8,26 @@ if (isset($_POST['create'])) {
     $pass = $_POST['pass'];
     $conf_pass = $_POST['conf_pass'];
 
-    if ($pass == $conf_pass)
-    {   
-        $errList=array();
-        $errList=signupValid();
+    if ($pass == $conf_pass) {
+        $errList = array();
+        $errList = signupValid();
 
         $encPass = md5($pass);
-        
-        if(!count($errList))
-        {
+
+        if (!count($errList)) {
             $abc = "INSERT INTO auth(photo,fullname,email,mobile,pass,created)
                         VALUES('$path','$name','$email',$mobile,'$encPass',now())";
 
-            if ($conn->query($abc)) 
-            {
-                echo "<script>
-                    swal('Data added successfully');
-                    window.location='signin.php';
-                </script>";
-            } 
-            else 
-            {
-                echo "Error : " . $conn->error;
+            if ($conn->query($abc)) {
+                move_uploaded_file($_FILES['myFile']['tmp_name'], $path);
+
+                $flag = 1;
+            } else {
+                $flag=2;
             }
         }
-    } 
-    else 
-    {
-        echo "Password not matched";
+    } else {
+        $flag=3;
     }
 }
 ?>
@@ -49,6 +40,31 @@ if (isset($_POST['create'])) {
 </head>
 
 <body>
+    <!-- If value of flag will be changed -->
+    <?php
+    if ($flag == 1) {
+        echo 
+        '<script>
+            swal("Account Created Successfully.")
+            .then((value) => {
+                window.location="signin.php"
+            });
+        </script>';
+    }
+    else if($flag==2){
+        echo 
+        '<script>
+            swal("Something went wrong! Try after sometime.")
+        </script>';
+    }
+    else if($flag==3){
+        echo 
+        '<script>
+            swal("Confirm Password & Password are not matched.")
+        </script>';
+    }
+    ?>
+
     <?php include('components/navbar.php'); ?>
 
     <div class="container mt-3">
@@ -57,32 +73,44 @@ if (isset($_POST['create'])) {
                 <label class="form-label">Select Profile Image : <sup class="text-danger">*</sup></label>
                 <input type="file" class="form-control" name="myFile">
             </div>
-            <?php if(isset($errList['fileErr'])) {echo "<span class='text-danger'>".$errList['fileErr']."</span>";} ?>
+            <?php if (isset($errList['fileErr'])) {
+                echo "<span class='text-danger'>" . $errList['fileErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Full Name : <sup class="text-danger">*</sup></label>
                 <input type="text" class="form-control" name="fullname">
             </div>
-            <?php if(isset($errList['nameErr'])) {echo "<span class='text-danger'>".$errList['nameErr']."</span>";} ?>
+            <?php if (isset($errList['nameErr'])) {
+                echo "<span class='text-danger'>" . $errList['nameErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Email address : <sup class="text-danger">*</sup></label>
                 <input type="email" class="form-control" name="email">
             </div>
-            <?php if(isset($errList['emailErr'])) {echo "<span class='text-danger'>".$errList['emailErr']."</span>";} ?>
+            <?php if (isset($errList['emailErr'])) {
+                echo "<span class='text-danger'>" . $errList['emailErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Mobile Number :<sup class="text-danger">*</sup></label>
                 <input type="tel" class="form-control" name="mobile">
             </div>
-            <?php if(isset($errList['mobErr'])) {echo "<span class='text-danger'>".$errList['mobErr']."</span>";} ?>
+            <?php if (isset($errList['mobErr'])) {
+                echo "<span class='text-danger'>" . $errList['mobErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Password : <sup class="text-danger">*</sup></label>
                 <input type="password" class="form-control" name="pass">
             </div>
-            <?php if(isset($errList['passErr'])) {echo "<span class='text-danger'>".$errList['passErr']."</span>";} ?>
+            <?php if (isset($errList['passErr'])) {
+                echo "<span class='text-danger'>" . $errList['passErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Confirm Password : <sup class="text-danger">*</sup></label>
                 <input type="password" class="form-control" name="conf_pass">
             </div>
-            <?php if(isset($errList['ConfPassErr'])) {echo "<span class='text-danger'>".$errList['ConfPassErr']."</span>";} ?>
+            <?php if (isset($errList['ConfPassErr'])) {
+                echo "<span class='text-danger'>" . $errList['ConfPassErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <button class="btn btn-success" type="submit" name="create">
                     Create Account

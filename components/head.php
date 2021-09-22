@@ -4,5 +4,6 @@
 <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
 <link rel="stylesheet" href="css/style.css"/>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <title>Home | Contact App</title>

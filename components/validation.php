@@ -12,18 +12,15 @@
 
         if($_FILES['myFile']['size']==null)
         {
-            $errors['fileErr']="Profile Image is Mandatory";
+            $errors['fileErr']="Profile image is mandatory";
         }
         else if($ext=='png'||$ext=='jpg'||$ext=='jpeg'||$ext=='svg')
         {
             if(!file_exists($path))
             {
                 // file size is must written in bytes
-                if($_FILES['myFile']['size']<=1000000)
+                if($_FILES['myFile']['size']<!1000000)
                 {
-                    move_uploaded_file($_FILES['myFile']['tmp_name'],$path);
-                }
-                else{
                    $errors['fileErr']="The limit file is exiced.The allowed size is 1 MB.";
                 }
             }
@@ -104,10 +101,17 @@
         {
             $errors['passErr']="Password could not be empty";
         }
-        else if(!preg_match("#^(?.=*[0-9])(?.=*[a-z])(?.=*[A-Z])(?.=*[$!@#%^&*])[0-9a-zA-z$!@#%^&*]{1}*$#",$_POST['pass']))
-        {
-            $errors['passErr']="Not a valid password must use ONE Specal character
-                One Number,One Capital Latter,One Lower Latter";
+        elseif(!preg_match("#[0-9]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Number!";
+        }
+        elseif(!preg_match("#[A-Z]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Capital Letter!";
+        }
+        elseif(!preg_match("#[a-z]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Lowercase Letter!";
+        }
+        elseif(!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_POST['pass'])) {
+            $errors['passErr']= "Your Password Must Contain At Least 1 Special Character !"."<br>";
         }
         else if(strlen($_POST['pass'])<=6)
         {
@@ -124,6 +128,59 @@
             $errors['ConfPassErr']="Password could not be empty";
         }
 
+        return $errors;
+    }
+
+    function signinValid(){
+        $errors=array();
+        // For Email Validation <--- Code Starts Here
+
+        if(!$_POST['email'])
+        {
+            $errors['emailErr']="Email could not be empty";
+        }
+        else if(!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL))
+        {
+            $errors['emailErr']="Not a valid email structure";
+        }
+        else if(strlen($_POST['email'])<=10)
+        {
+            $errors['emailErr']="Email could not be less than 10 Characters";
+        }
+        else if(strlen($_POST['email'])>100)
+        {
+            $errors['emailErr']="Email could not be more than 100 Characters";
+        }
+
+        // For Email Validation <--- Code Ends Here
+
+        // For Password Validation <--- Code Starts Here
+
+        if(!$_POST['pass'])
+        {
+            $errors['passErr']="Password could not be empty";
+        }
+        elseif(!preg_match("#[0-9]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Number!";
+        }
+        elseif(!preg_match("#[A-Z]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Capital Letter!";
+        }
+        elseif(!preg_match("#[a-z]+#",$_POST['pass'])) {
+            $errors['passErr'] = "Your Password Must Contain At Least 1 Lowercase Letter!";
+        }
+        elseif(!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_POST['pass'])) {
+            $errors['passErr']= "Your Password Must Contain At Least 1 Special Character !"."<br>";
+        }
+        else if(strlen($_POST['pass'])<=6)
+        {
+            $errors['passErr']="Password could not be less than 6 Characters";
+        }
+        else if(strlen($_POST['pass'])>=15)
+        {
+            $errors['passErr']="Password could not be more than 15 Characters";
+        }
+        // For Password Validation <--- Code Ends Here
 
         return $errors;
     }

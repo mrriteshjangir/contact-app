@@ -8,10 +8,11 @@
 
     if($conn->connect_error)
     {
-        die("Coonection not done".$conn->connect_error);
+        die("Coonection not done ".$conn->connect_error);
     }
-    // else
-    // {
-    //     echo "Connection is successfull";
-    // }
+
+    // Validation file will include whenevr config file will attached
+    include('components/validation.php');
+
+    session_start();
 ?>

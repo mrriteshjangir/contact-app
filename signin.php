@@ -1,66 +1,94 @@
 <?php
-    include('config.php');
+include('config.php');
+$flag = 0;
+if (isset($_POST['signin'])) {
+    $email = $_POST['email'];
+    $pass = $_POST['pass'];
 
-    if(isset($_POST['signin']))
-    {
-        $email=$_POST['email'];
-        $pass=$_POST['pass'];
+    $errList = array();
+    $errList = signinValid();
 
-        $sql="SELECT * FROM auth WHERE email='$email'";
+    if (!count($errList)) {
+        $sql = "SELECT * FROM auth WHERE email='$email'";
 
-        $result=$conn->query($sql);
-                
-        if($result->num_rows>0){
-            
-            while($row=$result->fetch_assoc())
-            {
-                $encPass=md5($pass);
+        $result = $conn->query($sql);
 
-                if($row['pass']==$encPass)
-                {
-                    echo "
-                        <script>
-                            window.location='dashboard.php';
-                        </script>
-                    ";
+        if ($result->num_rows > 0) {
+
+            while ($row = $result->fetch_assoc()) {
+                $encPass = md5($pass);
+
+                if ($row['pass'] == $encPass) {
+                    $flag = 1;
+
+                    $_SESSION['user']=$row;
+
+                } else {
+                    $flag = 2;
                 }
-                else
-                {
-                    echo "Password is wrong";
-                }
-            } 
+            }
+        } else {
+            $flag = 3;
         }
-        else{
-            echo "You are not registed with us";
-        }  
     }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php include('components/head.php'); ?>
 </head>
+
 <body>
+    <!-- If value of flag will be changed -->
+    <?php
+    if ($flag == 1) {
+        echo '<script>
+            swal("Logged in successfully")
+            .then((value) => {
+                window.location="dashboard.php"
+            });
+        </script>';
+    } else if ($flag == 2) {
+        echo
+        '<script>
+                swal("Something went wrong! Try after sometime.")
+            </script>';
+    } else if ($flag == 3) {
+        echo
+        '<script>
+                swal("This email is not registered with us.")
+            </script>';
+    }
+    ?>
+
     <?php include('components/navbar.php'); ?>
-    
+
     <div class="container mt-3">
+
+
         <h2 class="text-center text-danger">Sign In at Contact Book</h2>
         <form class="s-form" action="" method="POST" enctype="multipart/form-data">
-            
+
             <div class="mb-3">
                 <label class="form-label">Email address :</label>
-                <input type="email" class="form-control" name="email" required maxlength="100" minlength="10">
+                <input type="email" class="form-control" name="email">
             </div>
-            
+            <?php if (isset($errList['emailErr'])) {
+                echo "<span class='text-danger'>" . $errList['emailErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-control" name="pass" required maxlength="15" minlength="6">
+                <input type="password" class="form-control" name="pass">
             </div>
-            
+            <?php if (isset($errList['passErr'])) {
+                echo "<span class='text-danger'>" . $errList['passErr'] . "</span>";
+            } ?>
             <div class="mb-3">
                 <button class="btn btn-success" type="submit" name="signin">
-                   Sign In
+                    Sign In
                 </button>
                 <button class="btn btn-warning" type="reset">
                     Reset
@@ -75,4 +103,5 @@
     <!-- this is script file -->
     <?php include('components/script.php'); ?>
 </body>
+
 </html>
