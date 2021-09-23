@@ -15,15 +15,25 @@ if (isset($_POST['create'])) {
         $encPass = md5($pass);
 
         if (!count($errList)) {
-            $abc = "INSERT INTO auth(photo,fullname,email,mobile,pass,created)
+            
+            $sql = "SELECT * FROM auth WHERE email='$email'";
+
+            $result = $conn->query($sql);
+
+            if($result->num_rows < 1){
+                $abc = "INSERT INTO auth(photo,fullname,email,mobile,pass,created)
                         VALUES('$path','$name','$email',$mobile,'$encPass',now())";
 
-            if ($conn->query($abc)) {
-                move_uploaded_file($_FILES['myFile']['tmp_name'], $path);
+                if ($conn->query($abc)) {
+                    move_uploaded_file($_FILES['myFile']['tmp_name'], $path);
 
-                $flag = 1;
-            } else {
-                $flag=2;
+                    $flag = 1;
+                } else {
+                    $flag=2;
+                }
+            }
+            else{
+                $flag=4;
             }
         }
     } else {
@@ -61,6 +71,12 @@ if (isset($_POST['create'])) {
         echo 
         '<script>
             swal("Confirm Password & Password are not matched.")
+        </script>';
+    }
+    else if($flag==4){
+        echo 
+        '<script>
+            swal("This email is already registered with us! Try new email.")
         </script>';
     }
     ?>

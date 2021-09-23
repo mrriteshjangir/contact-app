@@ -1,16 +1,28 @@
 <?php
     include('config.php');
+    if(!isset($_COOKIE['email']))
+    {
+        if(!isset($_SESSION['user']))
+        {
+            echo "
+                <script>
+                    window.location='signin.php';
+                </script>
+            ";
+        }
+    }
 ?>
 <!DOCTYPE html>
-<html>
-    <head>
-        
-    </head>
-    <body>
-        <img src="<?php echo $_SESSION['user']['photo']?>" height="200px"/>
-        <h2>Hellow, <?php echo $_SESSION['user']['fullname']; ?></h2>
-        <p> <?php echo $_SESSION['user']['email']; ?></p>
-        <p><?php echo $_SESSION['user']['created']; ?></p>
-        <p><?php echo $_SESSION['user']['mobile']; ?></p>
-    </body>
+<html lang="en">
+<head>
+    <?php include('components/head.php'); ?>
+</head>
+<body>
+    <?php include('components/navbar.php'); ?>
+    <h1>I'm dashboard</h1>
+    <?php include('components/footer.php'); ?>
+
+    <!-- this is script file -->
+    <?php include('components/script.php'); ?>
+</body>
 </html>

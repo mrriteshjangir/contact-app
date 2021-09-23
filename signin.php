@@ -1,6 +1,17 @@
 <?php
 include('config.php');
+
+if(isset($_COOKIE['email']))
+{
+    echo"
+        <script>
+            window.location='dashboard.php';
+        </script>
+    ";
+}
+
 $flag = 0;
+
 if (isset($_POST['signin'])) {
     $email = $_POST['email'];
     $pass = $_POST['pass'];
@@ -21,8 +32,11 @@ if (isset($_POST['signin'])) {
                 if ($row['pass'] == $encPass) {
                     $flag = 1;
 
-                    $_SESSION['user']=$row;
+                    $_SESSION['user'] = $row;
 
+                    if (!empty($_POST['saveme'])) {
+                        setcookie('email', $row['email'], time() + (86400 * 30));
+                    }
                 } else {
                     $flag = 2;
                 }
@@ -86,6 +100,14 @@ if (isset($_POST['signin'])) {
             <?php if (isset($errList['passErr'])) {
                 echo "<span class='text-danger'>" . $errList['passErr'] . "</span>";
             } ?>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="saveme" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Remember my info
+                </label>
+            </div>
+
             <div class="mb-3">
                 <button class="btn btn-success" type="submit" name="signin">
                     Sign In

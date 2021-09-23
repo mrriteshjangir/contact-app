@@ -5,6 +5,7 @@
 
         // For ProfileImage Validation <--- Code Starts Here
         global $path,$dir;
+        
         $dir='uploads/profile/';
         $path=$dir.$_FILES['myFile']['name'];
 
