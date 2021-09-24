@@ -24,8 +24,12 @@
         Action
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="signin.php">Sign In</a></li>
-        <li><a class="dropdown-item" href="signup.php">Sign Up</a></li>
+      <?php
+         echo  !isset($_COOKIE['email']) && !isset($_SESSION['user']) ?
+          '<li><a class="dropdown-item" href="signin.php">Sign In</a></li>
+          <li><a class="dropdown-item" href="signup.php">Sign Up</a></li>' : "" ;
+        ?>
+
         <li><a class="dropdown-item" href="logout.php">Logout</a></li>
       </ul>
     
