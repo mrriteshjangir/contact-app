@@ -27,10 +27,10 @@
       <?php
          echo  !isset($_COOKIE['email']) && !isset($_SESSION['user']) ?
           '<li><a class="dropdown-item" href="signin.php">Sign In</a></li>
-          <li><a class="dropdown-item" href="signup.php">Sign Up</a></li>' : "" ;
+          <li><a class="dropdown-item" href="signup.php">Sign Up</a></li>' 
+          : '<li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+          <li><a class="dropdown-item" href="logout.php">Logout</a></li>' ;
         ?>
-
-        <li><a class="dropdown-item" href="logout.php">Logout</a></li>
       </ul>
     
       </div>
