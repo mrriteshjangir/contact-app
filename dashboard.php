@@ -32,36 +32,91 @@ if (!isset($_COOKIE['email'])) {
         <!-- Contact List Started -->
 
         <div class="row">
+
+            <?php
+            if(isset($_COOKIE['email'])){
+                $authEmail=$_COOKIE['email'];
+            }
+            else
+            {
+                $authEmail=$_SESSION['user']['email'];
+            }
+
+            $sql = "SELECT * FROM mycontacts WHERE authEmail='$authEmail'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {                    
+                    $mArray=explode(",",$row['userMobile']);
+                    $eArray=explode(",",$row['userEmail']);
+                    echo '
             <div class="col-md-2">
                 <div class="card ">
-                    <img src="uploads\profile\demo1.png" class="card-img-top userProfile" alt="...">
+                    <img src="'.$row['userProfile'].'" class="card-img-top userProfile" alt="...">
                     <div class="card-body d-flex flex-column align-items-center ">
-                        <h5 class="card-title text-danger">John Deo</h5>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <h5 class="card-title text-danger">'.$row['userName'].'</h5>
+                        <p class="card-text">'.$mArray[0].'</p>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal'.$row['userId'].'">
                             Show More
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="exampleModal'.$row['userId'].'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Contact Information</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        ...
-                                    </div>
+                                        <h5><b>Name : </b>'.$row['userName'].'</h5>
+
+                                        ';  
+
+                                            $mCount=1;
+                                            foreach($mArray as $oneMobile)
+                                            {
+                                                echo"<p><b>Mobile ".$mCount." : </b>
+                                                    <a class='text-decoration-none' href='tel:".$oneMobile."'>".$oneMobile."</a>
+                                                </P>";
+                                                $mCount++;
+                                            }
+
+                                            $eCount=1;
+                                            foreach($eArray as $oneEmail)
+                                            {
+                                                echo"<p><b>Email ".$eCount." : </b>
+                                                    <a class='text-decoration-none' href='mailto:".$oneEmail."'>".$oneEmail."</a>
+                                                </P>";
+                                                $eCount++;
+                                            }
+
+                                        echo'
+                                        <address><b>Address : </b>'.$row['userAdress'].'</address>
+                                        ';
+                                         if($row['updated']!=null)
+                                         {
+                                            $date1=date_create($row['updated']);
+                                            echo "<i>Contact Updated on <b>".date_format($date,'d-M-y h:i A')."</b></i>";
+                                         }
+                                         $date=date_create($row['created']);
+                                         echo "<i>Contact Created on <b>".date_format($date,'d-M-y h:i A')."</b></i>";
+
+                                    echo'</div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>';
+                }
+            } else {
+                echo '<h3 class="text-center text-danger">No Contact Found</h3>';
+            }
+            ?>
         </div>
 
         <!-- Contact List Ended -->

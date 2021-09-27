@@ -30,7 +30,11 @@ if(isset($_POST['submit']))
 
     $dir="uploads/contacts/";
 
-    $path=$dir.$_FILES['myFile']['name'];
+    $temp=explode(".",$_FILES['myFile']['name']);
+
+    $newFileName="user-".round(microtime(true)).".".end($temp);
+
+    $path=$dir.$newFileName;
 
     $sql="INSERT INTO mycontacts(userName,userProfile,userEmail,userMobile,userAdress,authEmail,created)
     VALUES('$name','$path','$emails','$mobiles','$address','$authEmail',now());";
@@ -44,8 +48,7 @@ if(isset($_POST['submit']))
     {
         echo "Error is ".$conn->error;
         $flag=2;
-    }
-    
+    }  
 
 }
 
