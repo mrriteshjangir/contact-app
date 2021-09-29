@@ -49,6 +49,8 @@ if (!isset($_COOKIE['email'])) {
                 while ($row = $result->fetch_assoc()) {                    
                     $mArray=explode(",",$row['userMobile']);
                     $eArray=explode(",",$row['userEmail']);
+                    $file=json_encode($row['userProfile']);
+                                       
                     echo '
             <div class="col-md-2">
                 <div class="card ">
@@ -56,7 +58,7 @@ if (!isset($_COOKIE['email'])) {
                     <div class="card-body d-flex flex-column align-items-center ">
                         <h5 class="card-title text-danger">'.$row['userName'].'</h5>
                         <p class="card-text">'.$mArray[0].'</p>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal'.$row['userId'].'">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal'.$row['userId'].'">
                             Show More
                         </button>
 
@@ -102,16 +104,18 @@ if (!isset($_COOKIE['email'])) {
                                          $date=date_create($row['created']);
                                          echo "<i>Contact Created on <b>".date_format($date,'d-M-y h:i A')."</b></i>";
 
-                                    echo'</div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    echo"</div>
+                                    <div class='modal-footer'>
+                                        <button onclick='alertDelete(".$row['userId'].",".$file.")' class='text-decoration-none btn btn-danger'>Delete</button>
+                                        <button  class='text-decoration-none btn btn-primary'>Edit</button>
+                                        <button type='button' class='btn btn-warning' data-bs-dismiss='modal'>Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>';
+            </div>";
                 }
             } else {
                 echo '<h3 class="text-center text-danger">No Contact Found</h3>';
@@ -127,6 +131,18 @@ if (!isset($_COOKIE['email'])) {
 
     <!-- this is script file -->
     <?php include('components/script.php'); ?>
+    <script>
+        function alertDelete(q,f){
+            swal({
+                title:"Alert",
+                text:"Do u want to delete this contact ?",
+                icon:"error"
+            })
+            .then((value) => {
+                window.location.href="deletecontact.php?q="+q+"&f="+f;
+            });
+        }
+    </script>
 </body>
 
 </html>
