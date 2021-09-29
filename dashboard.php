@@ -99,7 +99,7 @@ if (!isset($_COOKIE['email'])) {
                                          if($row['updated']!=null)
                                          {
                                             $date1=date_create($row['updated']);
-                                            echo "<i>Contact Updated on <b>".date_format($date,'d-M-y h:i A')."</b></i>";
+                                            echo "<i>Contact Updated on <b>".date_format($date1,'d-M-y h:i A')."</b></i><br>";
                                          }
                                          $date=date_create($row['created']);
                                          echo "<i>Contact Created on <b>".date_format($date,'d-M-y h:i A')."</b></i>";
@@ -107,7 +107,7 @@ if (!isset($_COOKIE['email'])) {
                                     echo"</div>
                                     <div class='modal-footer'>
                                         <button onclick='alertDelete(".$row['userId'].",".$file.")' class='text-decoration-none btn btn-danger'>Delete</button>
-                                        <button  class='text-decoration-none btn btn-primary'>Edit</button>
+                                        <button onclick='alertEdit(".$row['userId'].",".$file.")'class='text-decoration-none btn btn-primary'>Edit</button>
                                         <button type='button' class='btn btn-warning' data-bs-dismiss='modal'>Close</button>
                                     </div>
                                 </div>
@@ -140,6 +140,17 @@ if (!isset($_COOKIE['email'])) {
             })
             .then((value) => {
                 window.location.href="deletecontact.php?q="+q+"&f="+f;
+            });
+        }
+
+        function alertEdit(q,f){
+            swal({
+                title:"Alert",
+                text:"Do u want to edit this contact ?",
+                icon:"warning"
+            })
+            .then((value) => {
+                window.location.href="editcontact.php?q="+q+"&f="+f;
             });
         }
     </script>
