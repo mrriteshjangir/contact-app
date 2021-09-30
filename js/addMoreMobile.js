@@ -6,7 +6,7 @@ $("#addMobile").click(function(){
     {
         var html='';
 
-        html+='<div id="mobileBox mb-3">';
+        html+='<div id="mobileBox" class="mb-3">';
         html+='<label class="form-label">Other Mobile address</label>';
         html+='<div class="input-group">';
         html+='<input type="tel" name="userMobile[]" class="form-control" placeholder="xxxxxxxxxx">';

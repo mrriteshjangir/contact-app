@@ -6,7 +6,7 @@ $("#addEmail").click(function(){
     {
         var html='';
 
-        html+='<div id="emailBox mb-3">';
+        html+='<div id="emailBox" class="mb-3">';
         html+='<label class="form-label">Other Email address</label>';
         html+='<div class="input-group">';
         html+='<input type="email" name="userEmail[]" class="form-control" placeholder="name@example.com">';

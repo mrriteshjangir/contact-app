@@ -42,14 +42,14 @@ if (!isset($_COOKIE['email'])) {
                 $authEmail=$_SESSION['user']['email'];
             }
 
-            $sql = "SELECT * FROM mycontacts WHERE authEmail='$authEmail'";
+            $sql = "SELECT * FROM mycontacts WHERE authEmail='$authEmail' AND hide=1";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {                    
                     $mArray=explode(",",$row['userMobile']);
                     $eArray=explode(",",$row['userEmail']);
-                    $file=json_encode($row['userProfile']);
+                    
                                        
                     echo '
             <div class="col-md-2">
@@ -106,8 +106,8 @@ if (!isset($_COOKIE['email'])) {
 
                                     echo"</div>
                                     <div class='modal-footer'>
-                                        <button onclick='alertDelete(".$row['userId'].",".$file.")' class='text-decoration-none btn btn-danger'>Delete</button>
-                                        <button onclick='alertEdit(".$row['userId'].",".$file.")'class='text-decoration-none btn btn-primary'>Edit</button>
+                                        <button onclick='alertDelete(".$row['userId'].",".json_encode($row['userProfile']).")' class='text-decoration-none btn btn-danger'>Delete</button>
+                                        <button onclick='alertUpdate(".$row['userId'].",".json_encode($row['userProfile']).")' class='text-decoration-none btn btn-primary'>Edit</button>
                                         <button type='button' class='btn btn-warning' data-bs-dismiss='modal'>Close</button>
                                     </div>
                                 </div>
@@ -135,23 +135,36 @@ if (!isset($_COOKIE['email'])) {
         function alertDelete(q,f){
             swal({
                 title:"Alert",
-                text:"Do u want to delete this contact ?",
-                icon:"error"
+                text:"Do you want to delete this contact ?",
+                icon:"warning",
+                buttons: true,
+                dangerMode: true,
             })
-            .then((value) => {
-                window.location.href="deletecontact.php?q="+q+"&f="+f;
-            });
+            .then((res)=>{
+                if(res)
+                {
+                    window.location.href="deletecontact.php?q="+q+"&f="+f;
+                }
+                else
+                {
+                    swal("Your data is safe");
+                }
+            })
         }
-
-        function alertEdit(q,f){
+        function alertUpdate(q,f){
             swal({
                 title:"Alert",
-                text:"Do u want to edit this contact ?",
-                icon:"warning"
+                text:"Do you want to edit this contact ?",
+                icon:"warning",
+                buttons: true,
+                dangerMode: true,
             })
-            .then((value) => {
-                window.location.href="editcontact.php?q="+q+"&f="+f;
-            });
+            .then((res)=>{
+                if(res)
+                {
+                    window.location.href="editcontact.php?q="+q+"&f="+f;
+                }
+            })
         }
     </script>
 </body>
