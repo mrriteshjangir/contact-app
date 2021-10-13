@@ -7,7 +7,12 @@
         global $path,$dir;
         
         $dir='uploads/profile/';
-        $path=$dir.$_FILES['myFile']['name'];
+
+        $temp=explode(".",$_FILES['myFile']['name']);
+
+        $newFileName="admin-".round(microtime(true)).".".end($temp);
+
+        $path=$dir.$newFileName;
 
         $ext = pathinfo($_FILES['myFile']['name'], PATHINFO_EXTENSION);
 
